@@ -43,8 +43,24 @@ var Player = function(x, y, speed) {
 };
 
 Player.prototype.update = function() {
-    //
-}
+  if (this.y > 383 ) {
+      this.y = 383;
+  }
+  if (this.x > 402.5) {
+      this.x = 402.5;
+  }
+  if (this.x < 2.5) {
+      this.x = 2.5;
+  }
+
+  //if player reaaches the top, its a winner!
+  if (this.y + 63 <= 0) {
+        this.y = 383;
+        this.x = 202.5;
+        console.log('You win!');
+        loadEnimies(this);
+    }
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -52,16 +68,16 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(keyPress) {
     if (keyPress == 'up') {
-        player.y -= player.speed - 20;
+        this.y -= this.speed - 20;
     }
     if (keyPress == 'down') {
-        player.y += player.speed - 20;
+        this.y += this.speed - 20;
     }
     if (keyPress == 'right') {
-        player.x += player.speed;
+        this.x += this.speed;
     }
     if (keyPress == 'left') {
-        player.x -= player.speed;
+        this.x -= this.speed;
     }
 
 };
@@ -69,38 +85,17 @@ Player.prototype.handleInput = function(keyPress) {
 var checkCollision = function(anEnemy) {
     // check for a collision between enemy and player
     if (
-        player.y + 131 >= anEnemy.y + 90
-        && player.x + 25 <= anEnemy.x + 88
-        && player.y + 73 <= anEnemy.y + 135
-        && player.x + 76 >= anEnemy.x + 11) {
+        player.y + 131 >= anEnemy.y + 90 &&
+        player.x + 25 <= anEnemy.x + 88 &&
+        player.y + 73 <= anEnemy.y + 135 &&
+        player.x + 76 >= anEnemy.x + 11) {
 
         // reset play location
         player.x = 202.5;
         player.y = 383;
     }
 
-    // keep player in bounds
-    if (player.y > 383 ) {
-        player.y = 383;
-    }
-    if (player.x > 402.5) {
-        player.x = 402.5;
-    }
-    if (player.x < 2.5) {
-        player.x = 2.5;
-    }
-
-    //if player reaaches the top, its a winner!
-    if (player.y + 63 <= 0) {
-          player.y = 383;
-          player.x = 202.5;
-
-          console.log('You win!');
-
-      }
-
-}
-
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -110,12 +105,16 @@ var player = new Player(202.5, 383, 50);
 
 
 // load between 1 -3 Enemies
-rand = Math.floor(Math.random() * 3) +1
-for (var i = 0; i < rand; i++){
-  var enemy = new Enemy(0, Math.random() * 184 + 50, Math.random() * 256);
-  allEnemies.push(enemy);
-}
+var loadEnimies = function(){
+  allEnemies = [];
+  var rand = Math.floor(Math.random() * 3) + 1;
+  for (var i = 0; i < rand; i++){
+    var enemy = new Enemy(0, Math.random() * 184 + 50, Math.random() * 256);
+    allEnemies.push(enemy);
+  }
+};
 
+loadEnimies();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
