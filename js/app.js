@@ -23,8 +23,19 @@ Enemy.prototype.update = function(dt) {
        this.x = 0;
    }
 
-    checkCollision(this);
+   this.checkCollision()
 
+};
+
+Enemy.prototype.checkCollision = function() {
+  if (player.y + 131 >= this.y + 90 &&
+      player.x + 25 <= this.x + 88 &&
+      player.y + 73 <= this.y + 135 &&
+      player.x + 76 >= this.x + 11) {
+
+      // reset play location
+      player.reset()
+  }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -43,6 +54,7 @@ var Player = function(x, y, speed) {
 };
 
 Player.prototype.update = function() {
+  //keep player in bounds
   if (this.y > 383 ) {
       this.y = 383;
   }
@@ -55,12 +67,16 @@ Player.prototype.update = function() {
 
   //if player reaaches the top, its a winner!
   if (this.y + 63 <= 0) {
-        this.y = 383;
-        this.x = 202.5;
-        console.log('You win!');
-        loadEnimies(this);
+      this.reset()
+      console.log('You win!');
+      loadEnimies();
     }
 };
+
+Player.prototype.reset = function() {
+    this.y = 383;
+    this.x = 202.5;
+}
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -82,20 +98,6 @@ Player.prototype.handleInput = function(keyPress) {
 
 };
 
-var checkCollision = function(anEnemy) {
-    // check for a collision between enemy and player
-    if (
-        player.y + 131 >= anEnemy.y + 90 &&
-        player.x + 25 <= anEnemy.x + 88 &&
-        player.y + 73 <= anEnemy.y + 135 &&
-        player.x + 76 >= anEnemy.x + 11) {
-
-        // reset play location
-        player.x = 202.5;
-        player.y = 383;
-    }
-
-};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
